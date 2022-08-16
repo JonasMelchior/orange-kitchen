@@ -8,19 +8,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@PageTitle("About")
-@Route(value = "about", layout = MainLayout.class)
-public class AboutView extends VerticalLayout {
+@PageTitle("Declaration of Independence")
+@Route(value = "declaration-of-independence", layout = MainLayout.class)
+public class DeclarationOfIndependenceView extends VerticalLayout {
 
-    public AboutView() {
+    public DeclarationOfIndependenceView() {
         setSpacing(false);
 
-        Image img = new Image("images/empty-plant.png", "placeholder plant");
-        img.setWidth("200px");
+        Image img = new Image("images/declaration_of_independence.png", "placeholder plant");
+        //img.setSizeFull();
         add(img);
-
-        add(new H2("This place intentionally left empty"));
-        add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);

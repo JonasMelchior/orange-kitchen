@@ -4,6 +4,8 @@
 .settings
 .project
 .classpath
+src/main/resources/application.properties
+src/main/java/com/application/DatabaseConfig.java
 
 *.iml
 .DS_Store

@@ -3,16 +3,15 @@ package com.application.views;
 
 import com.application.components.appnav.AppNav;
 import com.application.components.appnav.AppNavItem;
-import com.application.views.about.AboutView;
-import com.application.views.helloworld.HelloWorldView;
+import com.application.views.about.DeclarationOfIndependenceView;
+import com.application.views.helloworld.FoodClubView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.PageTitle;
 
 /**
@@ -43,10 +42,9 @@ public class MainLayout extends AppLayout {
     }
 
     private Component createDrawerContent() {
-        H2 appName = new H2("orange-kitchen");
-        appName.addClassNames("app-name");
+        Image image = new Image("icons/orange_kitchen.png", "Orange kitchen logo placeholder");
 
-        com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName,
+        com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(image,
                 createNavigation(), createFooter());
         section.addClassNames("drawer-section");
         return section;
@@ -58,8 +56,8 @@ public class MainLayout extends AppLayout {
         AppNav nav = new AppNav();
         nav.addClassNames("app-nav");
 
-        nav.addItem(new AppNavItem("Hello World", HelloWorldView.class, "la la-file"));
-        nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
+        nav.addItem(new AppNavItem("Home", FoodClubView.class, new Icon(VaadinIcon.HOME)));
+        nav.addItem(new AppNavItem("Declaration of Independence", DeclarationOfIndependenceView.class, new Icon(VaadinIcon.FILE_TEXT_O)));
 
         return nav;
     }

@@ -21,11 +21,24 @@ public class FoodClubEvent {
     private String participants;
     private String chefs;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] foodPicture;
+
     public FoodClubEvent(String meetingDate, String meetingTime, String participants, String chefs) {
         this.meetingDate = meetingDate;
         this.meetingTime = meetingTime;
         this.participants = participants;
         this.chefs = chefs;
+    }
+
+    public FoodClubEvent(Long id, String meetingDate, String meetingTime, String participants, String chefs, byte[] foodPicture) {
+        this.id = id;
+        this.meetingDate = meetingDate;
+        this.meetingTime = meetingTime;
+        this.participants = participants;
+        this.chefs = chefs;
+        this.foodPicture = foodPicture;
     }
 
     public FoodClubEvent(Long id, String meetingDate, String meetingTime, String participants, String chefs) {
@@ -37,6 +50,14 @@ public class FoodClubEvent {
     }
 
     public FoodClubEvent() {
+    }
+
+    public byte[] getFoodPicture() {
+        return foodPicture;
+    }
+
+    public void setFoodPicture(byte[] foodPicture) {
+        this.foodPicture = foodPicture;
     }
 
     public Long getId() {

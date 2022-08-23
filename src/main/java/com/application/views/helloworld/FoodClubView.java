@@ -9,16 +9,23 @@ import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,6 +43,8 @@ public class FoodClubView extends VerticalLayout {
     Grid<FoodClubEvent> foodClubEventGrid = new Grid<>(FoodClubEvent.class, false);
 
     Dialog addFoodClubEventDialog = new Dialog(createFoodClubEventFormDialogLayout());
+
+    Upload upload;
     public FoodClubView() {
 
         Button openAddFoodClubEventDialogButton = new Button("Add new food club event", event -> {
@@ -110,7 +119,32 @@ public class FoodClubView extends VerticalLayout {
             return multiSelectListBox;
         }).setHeader("Chefs");
         foodClubEventGrid.addComponentColumn(event -> {
-           Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
+            VerticalLayout imageContainer = new VerticalLayout();
+
+            MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
+            upload = new Upload(buffer);
+            upload.setAcceptedFileTypes("image/jpeg","image/jpg", "image/png", "image/gif");
+
+            upload.addSucceededListener(e -> {
+                String attachmentName = e.getFileName();
+                try {
+                    // The image can be jpg png or gif, but we store it always as png file in this example
+                    BufferedImage inputImage = ImageIO.read(buffer.getInputStream(attachmentName));
+                    ByteArrayOutputStream pngContent = new ByteArrayOutputStream();
+                    ImageIO.write(inputImage, "png", pngContent);
+                    saveFoodPicture(pngContent.toByteArray(), event);
+                    showImage(event, imageContainer);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            });
+            showImage(event, imageContainer);
+            VerticalLayout layout = new VerticalLayout(imageContainer, upload);
+            layout.setDefaultHorizontalComponentAlignment(Alignment.BASELINE);
+            return layout;
+        }).setHeader("Menu");
+        foodClubEventGrid.addComponentColumn(event -> {
+            Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON,
                     ButtonVariant.LUMO_ERROR,
                     ButtonVariant.LUMO_TERTIARY);
@@ -128,11 +162,27 @@ public class FoodClubView extends VerticalLayout {
         mainLayout.setSizeFull();
 
 
+
+
         add(openAddFoodClubEventDialogButton, mainLayout);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         setSizeFull();
 
     }
+
+    private void saveFoodPicture(byte[] imageBytes, FoodClubEvent foodClubEvent) {
+        foodClubEvent.setFoodPicture(imageBytes);
+        foodClubEventService.saveFoodClubEvent(foodClubEvent);
+    }
+
+    private void showImage(FoodClubEvent foodClubEvent, VerticalLayout imageContainer) {
+        Image image = foodClubEventService.generateFoodImage(foodClubEvent);
+        image.setWidth("200px");
+        image.setHeight("200px");
+        imageContainer.removeAll();
+        imageContainer.add(image);
+    }
+
 
     @PostConstruct
     public void postConstructor() {

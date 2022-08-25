@@ -1,6 +1,6 @@
 package com.application.service.foodclub;
 
-import com.application.entity.FoodClubEvent;
+import com.application.entity.kitchen.club.FoodClubEvent;
 import com.application.repository.FoodClubEventRepository;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.server.StreamResource;

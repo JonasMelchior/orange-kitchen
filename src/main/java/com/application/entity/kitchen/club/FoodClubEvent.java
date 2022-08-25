@@ -1,4 +1,4 @@
-package com.application.entity;
+package com.application.entity.kitchen.club;
 
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

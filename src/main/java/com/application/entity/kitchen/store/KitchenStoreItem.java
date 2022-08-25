@@ -1,5 +1,4 @@
-/*
-package com.application.entity;
+package com.application.entity.kitchen.store;
 
 import javax.persistence.*;
 
@@ -14,14 +13,6 @@ public abstract class KitchenStoreItem {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] foodPicture;
-
-    public KitchenStoreItem(Long id, double price) {
-        this.id = id;
-        this.price = price;
-    }
-
-    public KitchenStoreItem() {
-    }
 
     public Long getId() {
         return id;
@@ -38,6 +29,13 @@ public abstract class KitchenStoreItem {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public byte[] getFoodPicture() {
+        return foodPicture;
+    }
+
+    public void setFoodPicture(byte[] foodPicture) {
+        this.foodPicture = foodPicture;
+    }
 }
-*/
 

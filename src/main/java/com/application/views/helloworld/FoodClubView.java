@@ -1,6 +1,6 @@
 package com.application.views.helloworld;
 
-import com.application.entity.FoodClubEvent;
+import com.application.entity.kitchen.club.FoodClubEvent;
 import com.application.service.foodclub.IFoodClubEventService;
 import com.application.views.MainLayout;
 import com.vaadin.flow.component.button.Button;

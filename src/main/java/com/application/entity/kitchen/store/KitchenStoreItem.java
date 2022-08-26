@@ -12,7 +12,7 @@ public abstract class KitchenStoreItem {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    private byte[] foodPicture;
+    private byte[] picture;
 
     public Long getId() {
         return id;
@@ -31,11 +31,11 @@ public abstract class KitchenStoreItem {
     }
 
     public byte[] getFoodPicture() {
-        return foodPicture;
+        return picture;
     }
 
-    public void setFoodPicture(byte[] foodPicture) {
-        this.foodPicture = foodPicture;
+    public void setFoodPicture(byte[] picture) {
+        this.picture = picture;
     }
 }
 

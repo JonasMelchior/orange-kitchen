@@ -1,0 +1,9 @@
+.layout-with-border-store-item {
+    border-radius: 25px;
+    border: 4px solid orange;
+    padding: 20px;
+    width: 500px;
+    height: border-box;
+    position: center;
+}
+

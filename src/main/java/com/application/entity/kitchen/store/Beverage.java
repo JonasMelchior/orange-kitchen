@@ -5,16 +5,16 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "kitchen_store_items_beer")
+@Table(name = "kitchen_store_items_beverage")
 @EnableAutoConfiguration
 public class Beverage extends KitchenStoreItem{
 
     private String brand;
     private String description;
-    private int percentage;
+    private double percentage;
     private boolean orangeFactor;
 
-    public Beverage(String brand, String description, int percentage, boolean orangeFactor) {
+    public Beverage(String brand, String description, double percentage, boolean orangeFactor) {
         this.brand = brand;
         this.description = description;
         this.percentage = percentage;
@@ -40,11 +40,11 @@ public class Beverage extends KitchenStoreItem{
         this.description = description;
     }
 
-    public int getPercentage() {
+    public double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(int percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 

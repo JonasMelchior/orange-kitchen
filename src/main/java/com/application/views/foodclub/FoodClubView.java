@@ -1,4 +1,4 @@
-package com.application.views.helloworld;
+package com.application.views.foodclub;
 
 import com.application.entity.kitchen.club.FoodClubEvent;
 import com.application.service.foodclub.IFoodClubEventService;
@@ -45,6 +45,8 @@ public class FoodClubView extends VerticalLayout {
     Dialog addFoodClubEventDialog = new Dialog(createFoodClubEventFormDialogLayout());
 
     Upload upload;
+
+
     public FoodClubView() {
 
         Button openAddFoodClubEventDialogButton = new Button("Add new food club event", event -> {

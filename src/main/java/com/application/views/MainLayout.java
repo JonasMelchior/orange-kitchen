@@ -4,7 +4,8 @@ package com.application.views;
 import com.application.components.appnav.AppNav;
 import com.application.components.appnav.AppNavItem;
 import com.application.views.about.DeclarationOfIndependenceView;
-import com.application.views.helloworld.FoodClubView;
+import com.application.views.foodclub.FoodClubView;
+import com.application.views.kitchenstore.KitchenStoreView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -58,6 +59,7 @@ public class MainLayout extends AppLayout {
 
         nav.addItem(new AppNavItem("Home", FoodClubView.class, new Icon(VaadinIcon.HOME)));
         nav.addItem(new AppNavItem("Declaration of Independence", DeclarationOfIndependenceView.class, new Icon(VaadinIcon.FILE_TEXT_O)));
+        nav.addItem(new AppNavItem("Kitchen Store", KitchenStoreView.class, new Icon(VaadinIcon.SHOP)));
 
         return nav;
     }

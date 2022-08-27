@@ -8,13 +8,17 @@ import com.application.service.store.IPurchaseService;
 import com.application.service.store.PurchaseService;
 import com.application.views.MainLayout;
 import com.application.views.components.store.BeverageForm;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.charts.model.Dial;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -51,7 +55,7 @@ public class KitchenStoreView extends VerticalLayout {
         });
 
 
-        VerticalLayout beveragesLayout = new VerticalLayout(generateBeveragesLayout());
+        FlexLayout beveragesLayout = new FlexLayout(generateBeveragesLayout());
 
         HorizontalLayout mainLayout = new HorizontalLayout(beveragesLayout, beverageForm);
         mainLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
@@ -95,11 +99,30 @@ public class KitchenStoreView extends VerticalLayout {
             Div price = new Div();
             price.setText("Price: " + beverage.getPrice() + " DKK");
 
-            Button buyButton = new Button("Buy", buy -> {
+            Button buyButton = new Button("Buy", new Icon(VaadinIcon.DOLLAR));
+            buyButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+
+            buyButton.addClickListener(buy -> {
                 buyDialog.removeAll();
                 buyDialog.add(createBuyItemDialogLayout(beverage));
                 buyDialog.open();
             });
+
+
+            Button editButton = new Button("Edit Item", edit -> {
+               beverageForm.editBeverage(beverage);
+               beverageForm.setVisible(true);
+            });
+
+            Button deleteButton = new Button(new Icon(VaadinIcon.TRASH), delete -> {
+                beverageService.deleteBeverage(beverage);
+                UI.getCurrent().getPage().reload();
+            });
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+
+            HorizontalLayout buttonLayout = new HorizontalLayout(buyButton, editButton, deleteButton);
+            buttonLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
             beverageLayout.add(
                     brand,
@@ -107,7 +130,7 @@ public class KitchenStoreView extends VerticalLayout {
                     percentage,
                     orangeFactor,
                     price,
-                    buyButton
+                    buttonLayout
             );
             beverageLayout.addClassNames("layout-with-border-store-item");
             beveragesLayout.setFlexBasis("200px", beverageLayout);
@@ -125,8 +148,15 @@ public class KitchenStoreView extends VerticalLayout {
         IntegerField roomNumberField = new IntegerField("Room Number");
         roomNumberField.setHelperText("E.g. 8 or 16");
 
-        IntegerField phoneNumberField = new IntegerField("Phone Number");
+        HorizontalLayout row1 = new HorizontalLayout(nameField, roomNumberField);
+        row1.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
+        IntegerField phoneNumberField = new IntegerField("Phone Number");
+        phoneNumberField.setWidthFull();
+
+        IntegerField quantity = new IntegerField("Quantity");
+        quantity.setHasControls(true);
+        quantity.setWidthFull();
 
         Button finishButton = new Button("Finish", finish -> {
 
@@ -134,14 +164,17 @@ public class KitchenStoreView extends VerticalLayout {
                     roomNumberField.getValue(),
                     nameField.getValue(),
                     beverage.getPrice(),
-                    phoneNumberField.getValue()
+                    phoneNumberField.getValue(),
+                    beverage.getBrand(),
+                    quantity.getValue()
             ));
             Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
             buyDialog.close();
         });
 
-        VerticalLayout dialogLayout = new VerticalLayout(nameField, roomNumberField, phoneNumberField, finishButton);
+        VerticalLayout dialogLayout = new VerticalLayout(row1, phoneNumberField, quantity, finishButton);
         dialogLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+
 
         return dialogLayout;
     }

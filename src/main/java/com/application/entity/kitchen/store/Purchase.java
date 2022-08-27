@@ -2,10 +2,8 @@ package com.application.entity.kitchen.store;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "kitchen_store_user_purchases")
@@ -22,21 +20,55 @@ public class Purchase {
 
     private double purchaseAmount;
 
-    public Purchase(Long id, int roomNumber, String name, double debt) {
+    private String brand;
+
+    @Column(columnDefinition = "integer default 1")
+    private int quantity;
+
+    public Purchase(Long id, int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity) {
         this.id = id;
+        this.phoneNumber = phoneNumber;
         this.roomNumber = roomNumber;
         this.name = name;
-        this.purchaseAmount = debt;
+        this.purchaseAmount = purchaseAmount;
+        this.brand = brand;
+        this.quantity = quantity;
     }
 
-    public Purchase(int roomNumber, String name, double debt, int phoneNumber) {
+    public Purchase(int roomNumber, String name, double debt, int phoneNumber, String brand, int quantity) {
         this.phoneNumber = phoneNumber;
         this.roomNumber = roomNumber;
         this.name = name;
         this.purchaseAmount = debt;
+        this.brand = brand;
+        this.quantity = quantity;
     }
 
     public Purchase() {
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getPurchaseAmount() {
+        return purchaseAmount;
+    }
+
+    public void setPurchaseAmount(double purchaseAmount) {
+        this.purchaseAmount = purchaseAmount;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public int getPhoneNumber() {

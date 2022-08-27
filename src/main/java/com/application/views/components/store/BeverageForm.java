@@ -5,6 +5,7 @@ import com.application.service.store.IBeverageService;
 import com.application.service.store.BeverageService;
 import com.application.views.kitchenstore.KitchenStoreView;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -12,7 +13,9 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
@@ -61,6 +64,16 @@ public class BeverageForm extends FormLayout {
 
         configureImageUploader();
 
+        VerticalLayout formLayout = new VerticalLayout(
+                brand,
+                description,
+                percentage,
+                orangeFactor,
+                price,
+                imageUpload,
+                createButtonsLayout()
+        );
+
         add(
                 brand,
                 description,
@@ -106,15 +119,17 @@ public class BeverageForm extends FormLayout {
             UI.getCurrent().getPage().reload();
         });
 
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         save.addClickShortcut(Key.ENTER);
 
 
         close.addClickShortcut(Key.ESCAPE);
+        close.addClickListener(close -> {
+           this.setVisible(false);
+        });
 
-        return new HorizontalLayout(save, delete, close);
+        return new HorizontalLayout(save, close);
 
     }
 
@@ -127,5 +142,18 @@ public class BeverageForm extends FormLayout {
         strings.add("Royal");
 
         return strings;
+    }
+
+    public void editBeverage(Beverage beverage) {
+        this.beverage = beverage;
+        if (beverage.getBrand() != null) {
+            brand.setValue(beverage.getBrand());
+        }
+        if (beverage.getDescription() != null) {
+            description.setValue(beverage.getDescription());
+        }
+        percentage.setValue(beverage.getPercentage());
+        orangeFactor.setValue(beverage.isOrangeFactor());
+        price.setValue(beverage.getPrice());
     }
 }

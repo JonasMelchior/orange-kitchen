@@ -6,7 +6,9 @@ import org.springframework.context.annotation.*;
 import javax.sql.DataSource;
 
 *//*
+
 For deployment at heroku
+
 *//*
 
 @Configuration

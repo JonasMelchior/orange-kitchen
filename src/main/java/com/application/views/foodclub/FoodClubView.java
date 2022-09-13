@@ -53,8 +53,6 @@ public class FoodClubView extends VerticalLayout {
             addFoodClubEventDialog.open();
         });
 
-
-
         foodClubEventGrid.addComponentColumn(event -> {
            DateTimePicker dateTimePicker = new DateTimePicker();
             String[] date = event.getMeetingDate().split("-");
@@ -245,6 +243,7 @@ public class FoodClubView extends VerticalLayout {
     private List<String> getPeopleFromKitchen() {
         List<String> retList = new ArrayList<>();
 
+        retList.add("Abhista Partal");
         retList.add("Bo Cui");
         retList.add("Agnes Hein");
         retList.add("Ambrus Török");
@@ -264,6 +263,7 @@ public class FoodClubView extends VerticalLayout {
         retList.add("Long Ngo");
         retList.add("Marcus Galea Jacobsen");
         retList.add("Mette Elizabeth Kristensen");
+        retList.add("Mikki Olsen");
         retList.add("Mikkel Kannik");
         retList.add("Ronja Toft");
         retList.add("Valentina Custodio");

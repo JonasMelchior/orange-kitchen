@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Date;
 
 @Entity
 @Table(name = "kitchen_store_user_purchases")
@@ -21,9 +22,11 @@ public class Purchase {
     private double purchaseAmount;
 
     private String brand;
-
     @Column(columnDefinition = "integer default 1")
     private int quantity;
+
+    private java.sql.Date date;
+
 
     public Purchase(Long id, int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity) {
         this.id = id;
@@ -42,6 +45,24 @@ public class Purchase {
         this.purchaseAmount = debt;
         this.brand = brand;
         this.quantity = quantity;
+    }
+
+    public Purchase(int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity, Date date) {
+        this.phoneNumber = phoneNumber;
+        this.roomNumber = roomNumber;
+        this.name = name;
+        this.purchaseAmount = purchaseAmount;
+        this.brand = brand;
+        this.quantity = quantity;
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Purchase() {

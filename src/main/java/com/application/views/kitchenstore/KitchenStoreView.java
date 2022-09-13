@@ -32,6 +32,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.List;
 
 @PageTitle("Kitchen Store")
@@ -161,12 +162,13 @@ public class KitchenStoreView extends VerticalLayout {
         Button finishButton = new Button("Finish", finish -> {
 
             purchaseService.savePurchase(new Purchase(
+                    phoneNumberField.getValue(),
                     roomNumberField.getValue(),
                     nameField.getValue(),
                     beverage.getPrice(),
-                    phoneNumberField.getValue(),
                     beverage.getBrand(),
-                    quantity.getValue()
+                    quantity.getValue(),
+                    new java.sql.Date(System.currentTimeMillis())
             ));
             Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
             buyDialog.close();
@@ -174,7 +176,6 @@ public class KitchenStoreView extends VerticalLayout {
 
         VerticalLayout dialogLayout = new VerticalLayout(row1, phoneNumberField, quantity, finishButton);
         dialogLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-
 
         return dialogLayout;
     }

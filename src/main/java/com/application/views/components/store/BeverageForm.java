@@ -13,6 +13,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -50,13 +51,15 @@ public class BeverageForm extends FormLayout {
     public BeverageForm(@Autowired BeverageService service) {
         this.service = service;
         brand.setItems(getBeerBrands());
-        brand.setAllowCustomValue(true);
+        brand.setAllowCustomValue(false);
 
         Div percentSuffix = new Div();
         percentSuffix.setText("%");
         percentage.setSuffixComponent(percentSuffix);
         percentage.setMin(0);
         percentage.setMax(100);
+
+
 
         Div dkkSuffix = new Div();
         dkkSuffix.setText("DKK");
@@ -140,6 +143,10 @@ public class BeverageForm extends FormLayout {
         strings.add("Heineken");
         strings.add("Tuborg");
         strings.add("Royal");
+        strings.add("Coke");
+        strings.add("Wine");
+        strings.add("Vodka");
+        strings.add("Other");
 
         return strings;
     }

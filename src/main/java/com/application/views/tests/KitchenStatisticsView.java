@@ -16,6 +16,8 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -55,6 +57,8 @@ public class KitchenStatisticsView extends VerticalLayout {
         monthlyRevenueField.setValue(purchaseService.getTotalRevenueCurrentMonth() + " DKK");
 
         dailyRevenues = purchaseService.getDailyRevenue();
+        dailyRevenues.sort(Comparator.comparingInt(DailyRevenue::getDayOfMonth));
+
         soChart.setSize("800px", "500px");
 
         // Generating some random values for a LineChart

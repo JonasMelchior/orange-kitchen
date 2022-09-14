@@ -41,7 +41,6 @@ public class KitchenStatisticsView extends VerticalLayout {
 
         monthlyRevenueField.setReadOnly(true);
 
-
         HorizontalLayout monthlyRevenueLayout = new HorizontalLayout(new Icon(VaadinIcon.ARROW_RIGHT), monthlyRevenueField);
         monthlyRevenueLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
@@ -59,7 +58,7 @@ public class KitchenStatisticsView extends VerticalLayout {
         dailyRevenues = purchaseService.getDailyRevenue();
         dailyRevenues.sort(Comparator.comparingInt(DailyRevenue::getDayOfMonth));
 
-        soChart.setSize("800px", "500px");
+        soChart.setSize("900px", "500px");
 
         // Generating some random values for a LineChart
         Random random = new Random();
@@ -68,8 +67,6 @@ public class KitchenStatisticsView extends VerticalLayout {
             xValues.add(dailyRevenue.getDayOfMonth());
             yValues.add(dailyRevenue.getRevenue());
         }
-        xValues.setName("X Values");
-        yValues.setName("Random Values");
 
         // Line chart is initialized with the generated XY values
         lineChart = new LineChart(xValues, yValues);
@@ -78,7 +75,9 @@ public class KitchenStatisticsView extends VerticalLayout {
         // Line chart needs a coordinate system to plot on
         // We need Number-type for both X and Y axes in this case
         XAxis xAxis = new XAxis(DataType.NUMBER);
+        xAxis.setName("Day of Month");
         YAxis yAxis = new YAxis(DataType.NUMBER);
+        yAxis.setName("Amount purchased for (DKK)");
         RectangularCoordinate rc = new RectangularCoordinate(xAxis, yAxis);
         lineChart.plotOn(rc);
 

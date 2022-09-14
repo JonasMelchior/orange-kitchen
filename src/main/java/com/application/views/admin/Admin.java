@@ -14,6 +14,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +32,42 @@ public class Admin extends VerticalLayout implements BeforeEnterObserver {
     Grid<Purchase> purchaseGrid = new Grid<>(Purchase.class, false);
     List<Purchase> purchases;
 
+    Tabs tabs;
+    private final Tab january;
+    private final Tab february;
+    private final Tab march;
+    private final Tab april;
+    private final Tab may;
+    private final Tab june;
+    private final Tab july;
+    private final Tab august;
+    private final Tab september;
+    private final Tab october;
+    private final Tab november;
+    private final Tab december;
+
     IPurchaseService purchaseService;
 
+
     public Admin(@Autowired PurchaseService purchaseService) {
+        january = new Tab("January");
+        february = new Tab("February");
+        march = new Tab("March");
+        april = new Tab("April");
+        may = new Tab("May");
+        june = new Tab("June");
+        july = new Tab("July");
+        august = new Tab("August");
+        september = new Tab("September");
+        october = new Tab("October");
+        november = new Tab("November");
+        december = new Tab("December");
+
+        tabs = new Tabs(january, february, march, april, may, june, july, august, september, october, november, december);
+        tabs.addSelectedChangeListener(event -> {
+           setTabContent(event.getSelectedTab());
+        });
+
         this.purchaseService = purchaseService;
         purchaseGrid.addColumn(Purchase::getName).setHeader("Name");
         purchaseGrid.addColumn(Purchase::getRoomNumber).setHeader("Room Number");
@@ -49,12 +84,109 @@ public class Admin extends VerticalLayout implements BeforeEnterObserver {
 
         purchases = this.purchaseService.findAll();
 
-        purchaseGrid.setItems(purchases);
+        int currentMonth = java.time.LocalDateTime.now().getMonthValue() - 1;
+        setGridContent(currentMonth);
+        setSelectedTab(currentMonth);
 
         mainLayout.add(purchaseGrid);
         mainLayout.setVisible(false);
-        add(mainLayout);
+        mainLayout.setSizeFull();
+        add(tabs, mainLayout);
+        setSizeFull();
     }
+
+    private void setSelectedTab(int currentMonth) {
+        if (currentMonth == 0) {
+            tabs.setSelectedTab(january);
+        }
+        else if (currentMonth == 1) {
+            tabs.setSelectedTab(february);
+        }
+        else if (currentMonth == 2) {
+            tabs.setSelectedTab(march);
+        }
+        else if (currentMonth == 3) {
+            tabs.setSelectedTab(april);
+        }
+        else if (currentMonth == 4) {
+            tabs.setSelectedTab(may);
+        }
+        else if (currentMonth == 5) {
+            tabs.setSelectedTab(june);
+        }
+        else if (currentMonth == 6) {
+            tabs.setSelectedTab(july);
+        }
+        else if (currentMonth == 7) {
+            tabs.setSelectedTab(august);
+        }
+        else if (currentMonth == 8) {
+            tabs.setSelectedTab(september);
+        }
+        else if (currentMonth == 9) {
+            tabs.setSelectedTab(october);
+        }
+        else if (currentMonth == 10) {
+            tabs.setSelectedTab(november);
+        }
+        else if (currentMonth == 11) {
+            tabs.setSelectedTab(december);
+        }
+    }
+
+    private void setTabContent(Tab selectedTab) {
+
+        if (selectedTab.equals(january)) {
+            setGridContent(0);
+        }
+        else if (selectedTab.equals(february)) {
+            setGridContent(1);
+        }
+        else if (selectedTab.equals(march)) {
+            setGridContent(2);
+        }
+        else if (selectedTab.equals(april)) {
+            setGridContent(3);
+        }
+        else if (selectedTab.equals(may)) {
+            setGridContent(4);
+        }
+        else if (selectedTab.equals(june)) {
+            setGridContent(5);
+        }
+        else if (selectedTab.equals(july)) {
+            setGridContent(6);
+        }
+        else if (selectedTab.equals(august)) {
+            setGridContent(7);
+        }
+        else if (selectedTab.equals(september)) {
+            setGridContent(8);
+        }
+        else if (selectedTab.equals(october)) {
+            setGridContent(9);
+        }
+        else if (selectedTab.equals(november)) {
+            setGridContent(10);
+        }
+        else if (selectedTab.equals(december)) {
+            setGridContent(11);
+        }
+
+    }
+
+    private void setGridContent(int month) {
+        List<Purchase> relevantPurchases = new ArrayList<>();
+
+        for (Purchase purchase : purchases) {
+            if (purchase.getDate().getMonth() == month) {
+                relevantPurchases.add(purchase);
+            }
+        }
+
+        purchaseGrid.setItems(relevantPurchases);
+    }
+
 
     private Dialog createDeletePurchaseDialog(Purchase purchase) {
         Dialog deletePurchaseDialog = new Dialog();

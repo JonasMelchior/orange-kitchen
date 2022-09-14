@@ -41,8 +41,6 @@ public class PurchaseService implements IPurchaseService{
 
         List<DailyRevenue> dailyRevenues = new ArrayList<>();
 
-
-
         for (int i = 0; i < purchases.size(); i++) {
             if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
                 DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount());
@@ -56,7 +54,6 @@ public class PurchaseService implements IPurchaseService{
                 dailyRevenues.add(dailyRevenue);
             }
         }
-
         return dailyRevenues;
     }
 

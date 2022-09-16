@@ -1,8 +1,11 @@
 package com.application.views.admin;
 
 import com.application.entity.kitchen.store.Purchase;
+import com.application.service.pdf.PdfGenerator;
 import com.application.service.store.IPurchaseService;
 import com.application.service.store.PurchaseService;
+import com.application.views.pdf.PurchasesPdfView;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -18,6 +21,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.VaadinSession;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -91,7 +95,13 @@ public class Admin extends VerticalLayout implements BeforeEnterObserver {
         mainLayout.add(purchaseGrid);
         mainLayout.setVisible(false);
         mainLayout.setSizeFull();
-        add(tabs, mainLayout);
+
+        Button generatePurchasesPdfButton = new Button("Download Purchases PDF", new Icon(VaadinIcon.DOWNLOAD));
+        generatePurchasesPdfButton.addClickListener(download -> {
+            UI.getCurrent().navigate(PurchasesPdfView.class);
+        });
+
+        add(tabs, generatePurchasesPdfButton, mainLayout);
         setSizeFull();
     }
 
@@ -185,6 +195,8 @@ public class Admin extends VerticalLayout implements BeforeEnterObserver {
         }
 
         purchaseGrid.setItems(relevantPurchases);
+        PdfGenerator pdfGenerator = new PdfGenerator(new ArrayList<>(relevantPurchases));
+        VaadinSession.getCurrent().getSession().setAttribute("pdf_generator", pdfGenerator);
     }
 
 

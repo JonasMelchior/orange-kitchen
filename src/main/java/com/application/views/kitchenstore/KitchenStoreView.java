@@ -47,6 +47,7 @@ public class KitchenStoreView extends VerticalLayout {
 
     public KitchenStoreView(@Autowired BeverageService beverageService, @Autowired PurchaseService purchaseService) {
         beverageForm = new BeverageForm(beverageService);
+        beverageForm.setVisible(false);
         this.beverageService = beverageService;
         this.purchaseService = purchaseService;
 
@@ -144,16 +145,7 @@ public class KitchenStoreView extends VerticalLayout {
 
 
     private VerticalLayout createBuyItemDialogLayout(Beverage beverage) {
-        TextField nameField = new TextField("Name");
-
         IntegerField roomNumberField = new IntegerField("Room Number");
-        roomNumberField.setHelperText("E.g. 8 or 16");
-
-        HorizontalLayout row1 = new HorizontalLayout(nameField, roomNumberField);
-        row1.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-
-        IntegerField phoneNumberField = new IntegerField("Phone Number");
-        phoneNumberField.setWidthFull();
 
         IntegerField quantity = new IntegerField("Quantity");
         quantity.setHasControls(true);
@@ -179,7 +171,7 @@ public class KitchenStoreView extends VerticalLayout {
             }
         });
 
-        VerticalLayout dialogLayout = new VerticalLayout(row1, phoneNumberField, quantity, finishButton);
+        VerticalLayout dialogLayout = new VerticalLayout(roomNumberField, quantity, finishButton);
         dialogLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         return dialogLayout;

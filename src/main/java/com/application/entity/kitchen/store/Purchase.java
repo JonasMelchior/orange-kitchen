@@ -14,10 +14,10 @@ public class Purchase {
     @Id
     @GeneratedValue
     private Long id;
-    private int phoneNumber;
+//    private int phoneNumber;
     private int roomNumber;
 
-    private String name;
+//    private String name;
 
     private double purchaseAmount;
 
@@ -28,7 +28,7 @@ public class Purchase {
     private java.sql.Date date;
 
 
-    public Purchase(Long id, int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity) {
+    /*public Purchase(Long id, int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.roomNumber = roomNumber;
@@ -36,21 +36,38 @@ public class Purchase {
         this.purchaseAmount = purchaseAmount;
         this.brand = brand;
         this.quantity = quantity;
-    }
+    }*/
 
-    public Purchase(int roomNumber, String name, double debt, int phoneNumber, String brand, int quantity) {
+    /*public Purchase(int roomNumber, String name, double debt, int phoneNumber, String brand, int quantity) {
         this.phoneNumber = phoneNumber;
         this.roomNumber = roomNumber;
         this.name = name;
         this.purchaseAmount = debt;
         this.brand = brand;
         this.quantity = quantity;
-    }
+    }*/
 
-    public Purchase(int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity, Date date) {
+    /*public Purchase(int phoneNumber, int roomNumber, String name, double purchaseAmount, String brand, int quantity, Date date) {
         this.phoneNumber = phoneNumber;
         this.roomNumber = roomNumber;
         this.name = name;
+        this.purchaseAmount = purchaseAmount;
+        this.brand = brand;
+        this.quantity = quantity;
+        this.date = date;
+    }*/
+
+    public Purchase(Long id, int roomNumber, double purchaseAmount, String brand, int quantity, Date date) {
+        this.id = id;
+        this.roomNumber = roomNumber;
+        this.purchaseAmount = purchaseAmount;
+        this.brand = brand;
+        this.quantity = quantity;
+        this.date = date;
+    }
+
+    public Purchase(int roomNumber, double purchaseAmount, String brand, int quantity, Date date) {
+        this.roomNumber = roomNumber;
         this.purchaseAmount = purchaseAmount;
         this.brand = brand;
         this.quantity = quantity;
@@ -92,13 +109,13 @@ public class Purchase {
         this.brand = brand;
     }
 
-    public int getPhoneNumber() {
+    /*public int getPhoneNumber() {
         return phoneNumber;
     }
 
     public void setPhoneNumber(int phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
+    }*/
 
     public int getRoomNumber() {
         return roomNumber;
@@ -108,13 +125,13 @@ public class Purchase {
         this.roomNumber = roomNumber;
     }
 
-    public String getName() {
+    /*public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
+    }*/
 
     public double getDebt() {
         return purchaseAmount;

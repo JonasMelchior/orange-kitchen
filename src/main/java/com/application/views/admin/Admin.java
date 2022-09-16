@@ -69,9 +69,9 @@ public class Admin extends VerticalLayout implements BeforeEnterObserver {
         });
 
         this.purchaseService = purchaseService;
-        purchaseGrid.addColumn(Purchase::getName).setHeader("Name");
+        //purchaseGrid.addColumn(Purchase::getName).setHeader("Name");
         purchaseGrid.addColumn(Purchase::getRoomNumber).setHeader("Room Number");
-        purchaseGrid.addColumn(Purchase::getPhoneNumber).setHeader("Phone Number");
+        //purchaseGrid.addColumn(Purchase::getPhoneNumber).setHeader("Phone Number");
         purchaseGrid.addColumn(Purchase::getBrand).setHeader("Bought Beverage Brand");
         purchaseGrid.addColumn(Purchase::getPurchaseAmount).setHeader("Purchase Amount (DKK)");
         purchaseGrid.addColumn(Purchase::getQuantity).setHeader("Quantity");

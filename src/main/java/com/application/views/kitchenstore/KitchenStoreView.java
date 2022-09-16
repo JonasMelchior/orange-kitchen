@@ -159,19 +159,24 @@ public class KitchenStoreView extends VerticalLayout {
         quantity.setHasControls(true);
         quantity.setWidthFull();
 
-        Button finishButton = new Button("Finish", finish -> {
+        roomNumberField.setRequiredIndicatorVisible(true);
+        quantity.setRequiredIndicatorVisible(true);
 
-            purchaseService.savePurchase(new Purchase(
-                    phoneNumberField.getValue(),
-                    roomNumberField.getValue(),
-                    nameField.getValue(),
-                    beverage.getPrice(),
-                    beverage.getBrand(),
-                    quantity.getValue(),
-                    new java.sql.Date(System.currentTimeMillis())
-            ));
-            Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
-            buyDialog.close();
+        Button finishButton = new Button("Finish", finish -> {
+            if (roomNumberField.isEmpty() || quantity.isEmpty()){
+                Notification.show("You must fill out required fields");
+            }
+            else {
+                purchaseService.savePurchase(new Purchase(
+                        roomNumberField.getValue(),
+                        beverage.getPrice(),
+                        beverage.getBrand(),
+                        quantity.getValue(),
+                        new java.sql.Date(System.currentTimeMillis())
+                ));
+                Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
+                buyDialog.close();
+            }
         });
 
         VerticalLayout dialogLayout = new VerticalLayout(row1, phoneNumberField, quantity, finishButton);

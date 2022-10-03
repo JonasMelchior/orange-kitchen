@@ -1,12 +1,18 @@
 package com.application;
 
+import com.application.entity.kitchen.store.PurchasedBrand;
+import com.application.service.store.IPurchaseService;
+import com.application.service.store.PurchaseService;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+import java.util.List;
 
 /**
  * The entry point of the Spring Boot application.
@@ -23,7 +29,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator {
 
     public static void main(String[] args) {
-
 
 
         SpringApplication.run(Application.class, args);

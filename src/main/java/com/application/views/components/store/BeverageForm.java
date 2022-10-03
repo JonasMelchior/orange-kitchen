@@ -32,7 +32,6 @@ import java.util.List;
 
 public class BeverageForm extends FormLayout {
 
-
     private IBeverageService service;
 
     ComboBox<String> brand = new ComboBox<>("Brand");

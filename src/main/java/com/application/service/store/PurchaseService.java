@@ -45,7 +45,8 @@ public class PurchaseService implements IPurchaseService{
             if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
                 DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount());
                 for (int j = 0; j < purchases.size(); j++) {
-                    if (purchases.get(j).getDate().getDate() == purchases.get(i).getDate().getDate() && i != j) {
+                    if (purchases.get(j).getDate().getDate() == purchases.get(i).getDate().getDate() && i != j &&
+                            java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(j).getDate().getMonth()) {
                         dailyRevenue.setRevenue(dailyRevenue.getRevenue() + purchases.get(j).getPurchaseAmount());
                         purchases.remove(j--);
                     }
@@ -67,9 +68,11 @@ public class PurchaseService implements IPurchaseService{
 
 
             if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
+                System.out.println("hello");
                 PurchasedBrand purchasedBrand = new PurchasedBrand(purchases.get(i).getBrand(), purchases.get(i).getQuantity());
                 for (int j = 0; j < purchases.size(); j++) {
-                    if (purchases.get(j).getBrand().equals(purchases.get(i).getBrand()) && i != j) {
+                    if (purchases.get(j).getBrand().equals(purchasedBrand.getBrand()) && i != j &&
+                            java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(j).getDate().getMonth()) {
                         purchasedBrand.setPurchasedAmount(purchasedBrand.getPurchasedAmount() + purchases.get(j).getQuantity());
                         purchases.remove(j--);
                     }

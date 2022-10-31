@@ -145,6 +145,10 @@ public class BeverageForm extends FormLayout {
         strings.add("Coke");
         strings.add("Wine");
         strings.add("Vodka");
+        strings.add("Fanta");
+        strings.add("Pepsi");
+        strings.add("Egekilde");
+        strings.add("Faxe Kondi");
         strings.add("Other");
 
         return strings;

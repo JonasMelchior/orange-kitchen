@@ -186,6 +186,7 @@ public class FoodClubView extends VerticalLayout {
 
     @PostConstruct
     public void postConstructor() {
+
         foodClubEvents = foodClubEventService.findAll();
         foodClubEventGrid.setItems(foodClubEvents);
     }

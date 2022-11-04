@@ -7,6 +7,7 @@ import com.vaadin.flow.server.StreamResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class FoodClubEventService implements IFoodClubEventService{
     @Autowired
     private FoodClubEventRepository repository;
 
+    @Transactional
     @Override
     public List<FoodClubEvent> findAll() {
         List<FoodClubEvent> foodClubEventList = new ArrayList<>();

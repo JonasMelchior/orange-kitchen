@@ -42,13 +42,13 @@ public class KitchenStatisticsView extends VerticalLayout {
 
         monthlyRevenueField.setReadOnly(true);
 
-        VerticalLayout monthlyRevenueLayout = new VerticalLayout(new Icon(VaadinIcon.ARROW_DOWN), monthlyRevenueField);
-        monthlyRevenueLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        HorizontalLayout monthlyRevenueLayout = new HorizontalLayout(new Icon(VaadinIcon.ARROW_RIGHT), monthlyRevenueField);
+        monthlyRevenueLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
-        VerticalLayout monthlyRevenueLayoutWrapper = new VerticalLayout(soChart, monthlyRevenueLayout);
-        monthlyRevenueLayoutWrapper.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        HorizontalLayout monthlyRevenueLayoutWrapper = new HorizontalLayout(soChart, monthlyRevenueLayout);
+        monthlyRevenueLayoutWrapper.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
-        add(soChart, soChart1, soChart2);
+        add(monthlyRevenueLayoutWrapper, soChart2, soChart1);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
     }
 
@@ -61,7 +61,7 @@ public class KitchenStatisticsView extends VerticalLayout {
 
 
 
-
+        soChart.setSize("900px", "500px");
 
 
         // Generating some random values for a LineChart
@@ -161,7 +161,6 @@ public class KitchenStatisticsView extends VerticalLayout {
             charts.add(bc);
         }
         charts.forEach(soChart2::add);
-        rc.getPosition(true).setBottom(Size.percentage(55));
     }
 
     private List<String> getBrands() {

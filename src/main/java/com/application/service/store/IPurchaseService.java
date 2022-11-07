@@ -13,6 +13,8 @@ public interface IPurchaseService {
     void deletePurchase(Purchase purchase);
     Optional<Purchase> findBPurchase(Long id);
     List<DailyRevenue> getDailyRevenue();
-    List<PurchasedBrand> getRevenueBrandBased();
+    List<DailyRevenue> getDailyRevenueBrandBased();
+    List<PurchasedBrand> getQuantityPurchasedBrandBased();
+
     double getTotalRevenueCurrentMonth();
 }

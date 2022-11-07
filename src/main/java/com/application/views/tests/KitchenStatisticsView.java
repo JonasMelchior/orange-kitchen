@@ -16,10 +16,7 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @PageTitle("Kitchen Statistics")
 @Route(value = "kitchen-statistics", layout = MainLayout.class)
@@ -32,22 +29,26 @@ public class KitchenStatisticsView extends VerticalLayout {
     private IPurchaseService purchaseService;
 
     List<DailyRevenue> dailyRevenues;
+    List<DailyRevenue> dailyRevenuesBrandBased;
     SOChart soChart = new SOChart();
     SOChart soChart1 = new SOChart();
+    SOChart soChart2 = new SOChart();
     TextField monthlyRevenueField = new TextField("Total Revenue this month");
     LineChart lineChart;
+    List<Chart> charts = new ArrayList<>();
 
     public KitchenStatisticsView() {
 
+
         monthlyRevenueField.setReadOnly(true);
 
-        HorizontalLayout monthlyRevenueLayout = new HorizontalLayout(new Icon(VaadinIcon.ARROW_RIGHT), monthlyRevenueField);
-        monthlyRevenueLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        VerticalLayout monthlyRevenueLayout = new VerticalLayout(new Icon(VaadinIcon.ARROW_DOWN), monthlyRevenueField);
+        monthlyRevenueLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
-        HorizontalLayout monthlyRevenueLayoutWrapper = new HorizontalLayout(soChart, monthlyRevenueLayout);
-        monthlyRevenueLayoutWrapper.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        VerticalLayout monthlyRevenueLayoutWrapper = new VerticalLayout(soChart, monthlyRevenueLayout);
+        monthlyRevenueLayoutWrapper.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
-        add(monthlyRevenueLayoutWrapper, soChart1);
+        add(soChart, soChart1, soChart2);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
     }
 
@@ -58,7 +59,10 @@ public class KitchenStatisticsView extends VerticalLayout {
         dailyRevenues = purchaseService.getDailyRevenue();
         dailyRevenues.sort(Comparator.comparingInt(DailyRevenue::getDayOfMonth));
 
-        soChart.setSize("900px", "500px");
+
+
+
+
 
         // Generating some random values for a LineChart
         Random random = new Random();
@@ -84,7 +88,7 @@ public class KitchenStatisticsView extends VerticalLayout {
         // Add to the chart display area with a simple title
         soChart.add(lineChart);
 
-        List<PurchasedBrand> purchasedBrands = purchaseService.getRevenueBrandBased();
+        List<PurchasedBrand> purchasedBrands = purchaseService.getQuantityPurchasedBrandBased();
 
         PieChart pieChart = new PieChart();
         pieChart.setName("Purchased brands");
@@ -98,13 +102,88 @@ public class KitchenStatisticsView extends VerticalLayout {
         }
 
 
+
+
         pieChart.setItemNames(brandNames);
         pieChart.setData(purchasedQuantities);
 
         soChart1.add(pieChart);
 
+        dailyRevenuesBrandBased = purchaseService.getDailyRevenueBrandBased();
+        dailyRevenuesBrandBased.sort(Comparator.comparingInt(DailyRevenue::getDayOfMonth));
+        List<String> relevantDates = new ArrayList<>();
+        for (DailyRevenue dailyRevenue : dailyRevenuesBrandBased) {
+            relevantDates.add(String.valueOf(dailyRevenue.getDayOfMonth()));
+        }
+
+        DataMatrix dailyRevenueBrandBasedData = new DataMatrix("Total purchased amount (DKK)");
+        dailyRevenueBrandBasedData.setColumnDataName("Revenue");
+        dailyRevenueBrandBasedData.setRowDataName("Day of month");
+        CategoryData categoryDataColumn = new CategoryData();
+        CategoryData categoryDataRow= new CategoryData();
+        categoryDataColumn.addAll(getBrands());
+        categoryDataRow.addAll(relevantDates);
+        dailyRevenueBrandBasedData.setColumnNames(categoryDataColumn);
+        dailyRevenueBrandBasedData.setRowNames(categoryDataRow);
+
+
+
+        for (DailyRevenue dailyRevenue : dailyRevenuesBrandBased) {
+            List<Double> currentDailyRevenueBrandBased = new ArrayList<>();
+            Iterator<String> itr=dailyRevenue.getBrandRevenues().keySet().iterator();
+            while (itr.hasNext()) {
+                String key = (String) itr.next();
+                currentDailyRevenueBrandBased.add(dailyRevenue.getBrandRevenues().get(key));
+            }
+            Data tmpData = new Data();
+            tmpData.addAll(currentDailyRevenueBrandBased);
+            dailyRevenueBrandBasedData.addRow(tmpData);
+        }
+
+        XAxis xAxisBc = new XAxis(DataType.CATEGORY);
+        xAxisBc.setName(dailyRevenueBrandBasedData.getRowDataName());
+        YAxis yAxisBc = new YAxis(DataType.NUMBER);
+        yAxisBc.setName(dailyRevenueBrandBasedData.getName());
+
+        RectangularCoordinate rcBc = new RectangularCoordinate();
+        rcBc.addAxis(xAxisBc, yAxisBc);
+
+        BarChart bc;
+
+        // Create a bar chart for each row
+        for (int i = 0; i < dailyRevenueBrandBasedData.getColumnCount(); i++) {
+            // Bar chart for the row
+            bc = new BarChart(dailyRevenueBrandBasedData.getRowNames(), dailyRevenueBrandBasedData.getColumn(i));
+            bc.setName(dailyRevenueBrandBasedData.getColumnName(i));
+            // Plot that to the coordinate system defined
+            bc.plotOn(rcBc);
+            // Add that to the chart list
+            charts.add(bc);
+        }
+        charts.forEach(soChart2::add);
+        rc.getPosition(true).setBottom(Size.percentage(55));
     }
 
+    private List<String> getBrands() {
+        List<String> brands = new ArrayList<>();
+
+        brands.add("Carlsberg");
+        brands.add("Heineken");
+        brands.add("Tuborg");
+        brands.add("Royal");
+        brands.add("Coke");
+        brands.add("Wine");
+        brands.add("Vodka");
+        brands.add("Fanta");
+        brands.add("Pepsi");
+        brands.add("Egekilde");
+        brands.add("Faxe Kondi");
+        brands.add("Other");
+
+        brands.sort(String::compareTo);
+
+        return brands;
+    }
 
 
 }

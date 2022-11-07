@@ -59,7 +59,98 @@ public class PurchaseService implements IPurchaseService{
     }
 
     @Override
-    public List<PurchasedBrand> getRevenueBrandBased() {
+    public List<DailyRevenue> getDailyRevenueBrandBased() {
+        List<Purchase> purchases = findAll();
+
+        List<DailyRevenue> dailyRevenues = new ArrayList<>();
+
+        for (int i = 0; i < purchases.size(); i++) {
+            if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
+                DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate());
+                Map<String, Double> dailyPurchasedBrandMap = new HashMap<>();
+                dailyPurchasedBrandMap.put(purchases.get(i).getBrand(), purchases.get(i).getPurchaseAmount() * purchases.get(i).getQuantity());
+                for (int j = 0; j < purchases.size(); j++) {
+                    if (purchases.get(j).getDate().getDate() == purchases.get(i).getDate().getDate() && i != j &&
+                            java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(j).getDate().getMonth()) {
+                        if (dailyPurchasedBrandMap.get(purchases.get(j).getBrand()) != null) {
+                            dailyPurchasedBrandMap.put(purchases.get(j).getBrand(), dailyPurchasedBrandMap.get(purchases.get(j).getBrand()) + purchases.get(j).getPurchaseAmount() * purchases.get(j).getQuantity());
+                        }
+                        else {
+                            dailyPurchasedBrandMap.put(purchases.get(j).getBrand(), purchases.get(j).getPurchaseAmount() * purchases.get(j).getQuantity());
+                        }
+                        purchases.remove(j--);
+                    }
+                }
+                purchases.remove(i--);
+                dailyRevenue.setBrandRevenues(dailyPurchasedBrandMap);
+                dailyRevenues.add(dailyRevenue);
+            }
+        }
+
+        for (DailyRevenue dailyRevenue : dailyRevenues) {
+           for (String brand : getBrands()) {
+                boolean brandPurchased = false;
+                Iterator itr=dailyRevenue.getBrandRevenues().keySet().iterator();
+                while (itr.hasNext()) {
+                    String key = (String) itr.next();
+                    if (key.equals(brand)) {
+                        brandPurchased = true;
+                    }
+                }
+                if (!brandPurchased) {
+                    dailyRevenue.getBrandRevenues().put(brand, (double) 0);
+                }
+            }
+            dailyRevenue.setBrandRevenues(sortHashMap(dailyRevenue.getBrandRevenues()));
+
+        }
+
+        return dailyRevenues;
+    }
+
+    private List<String> getBrands() {
+        List<String> brands = new ArrayList<>();
+
+        brands.add("Carlsberg");
+        brands.add("Heineken");
+        brands.add("Tuborg");
+        brands.add("Royal");
+        brands.add("Coke");
+        brands.add("Wine");
+        brands.add("Vodka");
+        brands.add("Fanta");
+        brands.add("Pepsi");
+        brands.add("Egekilde");
+        brands.add("Faxe Kondi");
+        brands.add("Other");
+
+        brands.sort(String::compareTo);
+
+        return brands;
+    }
+
+    private Map<String, Double> sortHashMap(Map<String, Double> map) {
+        List list = new LinkedList(map.entrySet());
+
+        Collections.sort(list, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                return ((Comparable) ((Map.Entry) (o1)).getKey()).compareTo(((Map.Entry) (o2)).getKey());
+            }
+        });
+
+        HashMap sortedHashMap = new LinkedHashMap();
+        for (Iterator it = list.iterator(); it.hasNext();)
+        {
+            Map.Entry entry = (Map.Entry) it.next();
+            sortedHashMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedHashMap;
+    }
+
+    @Override
+    public List<PurchasedBrand> getQuantityPurchasedBrandBased() {
         List<PurchasedBrand> purchasedBrands = new ArrayList<>();
 
         List<Purchase> purchases = findAll();
@@ -81,7 +172,6 @@ public class PurchaseService implements IPurchaseService{
                 purchasedBrands.add(purchasedBrand);
             }
         }
-
         return purchasedBrands;
     }
 

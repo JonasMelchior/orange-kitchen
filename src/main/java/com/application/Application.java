@@ -29,8 +29,6 @@ import java.util.List;
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator {
 
     public static void main(String[] args) {
-
-
         SpringApplication.run(Application.class, args);
     }
 

@@ -6,7 +6,7 @@ import com.application.components.appnav.AppNavItem;
 import com.application.views.about.DeclarationOfIndependenceView;
 import com.application.views.foodclub.FoodClubView;
 import com.application.views.kitchenstore.KitchenStoreView;
-import com.application.views.tests.KitchenStatisticsView;
+import com.application.views.statistics.KitchenStatisticsView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;

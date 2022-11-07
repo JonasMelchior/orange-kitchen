@@ -1,4 +1,4 @@
-package com.application.views.tests;
+package com.application.views.statistics;
 
 import com.application.entity.kitchen.store.DailyRevenue;
 import com.application.entity.kitchen.store.PurchasedBrand;

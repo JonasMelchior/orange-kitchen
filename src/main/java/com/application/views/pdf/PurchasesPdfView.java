@@ -13,7 +13,7 @@ public class PurchasesPdfView extends Div {
 
         PdfGenerator pdfGenerator = (PdfGenerator) VaadinSession.getCurrent().getSession().getAttribute("pdf_generator");
 
-        add(new EmbeddedPdfDocument(new StreamResource("solution.pdf", pdfGenerator::toBytearrayInputStream)));
+        add(new EmbeddedPdfDocument(new StreamResource("kitchen_expenses.pdf", pdfGenerator::toBytearrayInputStream)));
         setHeight("100%");
     }
 }

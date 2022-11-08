@@ -33,6 +33,7 @@ public class KitchenStatisticsView extends VerticalLayout {
     SOChart soChart = new SOChart();
     SOChart soChart1 = new SOChart();
     SOChart soChart2 = new SOChart();
+    SOChart soChart3 = new SOChart();
     TextField monthlyRevenueField = new TextField("Total Revenue this month");
     LineChart lineChart;
     List<Chart> charts = new ArrayList<>();
@@ -48,7 +49,15 @@ public class KitchenStatisticsView extends VerticalLayout {
         HorizontalLayout monthlyRevenueLayoutWrapper = new HorizontalLayout(soChart, monthlyRevenueLayout);
         monthlyRevenueLayoutWrapper.setDefaultVerticalComponentAlignment(Alignment.CENTER);
 
-        add(monthlyRevenueLayoutWrapper, soChart2, soChart1);
+        VerticalLayout verticalLayout1 = new VerticalLayout(monthlyRevenueLayoutWrapper, soChart1);
+        verticalLayout1.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+        VerticalLayout verticalLayout2 = new VerticalLayout(soChart2, soChart3);
+        verticalLayout2.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+
+        HorizontalLayout statisticsLayout = new HorizontalLayout(verticalLayout1, verticalLayout2);
+        statisticsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+
+        add(statisticsLayout);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
     }
 
@@ -58,11 +67,6 @@ public class KitchenStatisticsView extends VerticalLayout {
 
         dailyRevenues = purchaseService.getDailyRevenue();
         dailyRevenues.sort(Comparator.comparingInt(DailyRevenue::getDayOfMonth));
-
-
-
-        soChart.setSize("900px", "500px");
-
 
         // Generating some random values for a LineChart
         Random random = new Random();
@@ -162,13 +166,51 @@ public class KitchenStatisticsView extends VerticalLayout {
         }
         charts.forEach(soChart2::add);
 
-        List<List<DailyRevenue>> list = purchaseService.getDailyRevenueRoomNumberBased();
+        List<List<DailyRevenue>> dailyRevenuesRoomBased = purchaseService.getDailyRevenueRoomNumberBased();
 
-        for (int i = 0; i < list.size(); i++) {
-            for (DailyRevenue dailyRevenue : list.get(i)) {
+        for (List<DailyRevenue> revenues : dailyRevenuesRoomBased) {
+            System.out.println("New");
+            for (DailyRevenue dailyRevenue : revenues) {
+                System.out.println("Day of month: " + dailyRevenue.getDayOfMonth());
+                System.out.println("Room number: " + dailyRevenue.getRoomNumber());
                 System.out.println("Day of month: " + dailyRevenue.getDayOfMonth());
                 System.out.println("Purchased amount (DKK): " + dailyRevenue.getRevenue());
             }
+        }
+
+        LineChart[] lineCharts = new LineChart[dailyRevenuesRoomBased.size()];
+        Data[] xValuesRoomBased = new Data[lineCharts.length];
+        Data[] yValuesRoomBased = new Data[lineCharts.length];
+
+        int i;
+        for (i = 0; i < lineCharts.length; i++) {
+            xValuesRoomBased[i] = new Data();
+            xValuesRoomBased[i].setName("X (a = " + (i + 1) + ")");
+            yValuesRoomBased[i] = new Data();
+            yValuesRoomBased[i].setName("Y (a = " + (i + 1) + ")");
+        }
+
+        for (i = 0; i < lineCharts.length; i++) {
+            for (DailyRevenue dailyRevenue : dailyRevenuesRoomBased.get(i)) {
+                xValuesRoomBased[i].add(dailyRevenue.getDayOfMonth());
+                yValuesRoomBased[i].add(dailyRevenue.getRevenue());
+            }
+        }
+
+        for (i = 0; i < lineCharts.length; i++) {
+            lineCharts[i] = new LineChart(xValuesRoomBased[i], yValuesRoomBased[i]);
+            lineCharts[i].setName("Room Number " + dailyRevenuesRoomBased.get(i).get(0).getRoomNumber());
+        }
+
+        XAxis xAxisRoomBased = new XAxis(DataType.NUMBER);
+        xAxisRoomBased.setName("Day of month");
+        YAxis yAxisRoomBased = new YAxis(DataType.NUMBER);
+        yAxisRoomBased.setName("Amount purchased for");
+
+        RectangularCoordinate rcRoomBasedRevenue = new RectangularCoordinate(xAxisRoomBased, yAxisRoomBased);
+        for (i = 0; i < lineCharts.length; i++) {
+            lineCharts[i].plotOn(rcRoomBasedRevenue);
+            soChart3.add(lineCharts[i]); // Add the chart to the display area
         }
     }
 

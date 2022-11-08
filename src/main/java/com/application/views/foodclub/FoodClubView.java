@@ -1,6 +1,8 @@
 package com.application.views.foodclub;
 
+import com.application.entity.kitchen.club.ArchivedRecipe;
 import com.application.entity.kitchen.club.FoodClubEvent;
+import com.application.service.foodclub.IArchivedRecipeService;
 import com.application.service.foodclub.IFoodClubEventService;
 import com.application.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
@@ -13,7 +15,9 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
@@ -23,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,10 +44,13 @@ public class FoodClubView extends VerticalLayout {
 
     @Autowired
     private IFoodClubEventService foodClubEventService;
+    @Autowired
+    private IArchivedRecipeService archivedRecipeService;
     List<FoodClubEvent> foodClubEvents = new ArrayList<>();
     Grid<FoodClubEvent> foodClubEventGrid = new Grid<>(FoodClubEvent.class, false);
 
     Dialog addFoodClubEventDialog = new Dialog(createFoodClubEventFormDialogLayout());
+
 
     Upload upload;
 
@@ -144,7 +152,19 @@ public class FoodClubView extends VerticalLayout {
             return layout;
         }).setHeader("Menu");
         foodClubEventGrid.addComponentColumn(event -> {
-            Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
+            TextArea recipeTextArea = new TextArea();
+            if (event.getRecipe() != null) {
+                recipeTextArea.setValue(event.getRecipe());
+            }
+            recipeTextArea.addValueChangeListener(write -> {
+                event.setRecipe(write.getValue());
+                foodClubEventService.saveFoodClubEvent(event);
+            });
+
+            return recipeTextArea;
+        }).setHeader("Recipe");
+        foodClubEventGrid.addComponentColumn(event -> {
+            Button deleteButton = new Button("Delete", new Icon(VaadinIcon.TRASH));
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ICON,
                     ButtonVariant.LUMO_ERROR,
                     ButtonVariant.LUMO_TERTIARY);
@@ -155,7 +175,20 @@ public class FoodClubView extends VerticalLayout {
                 foodClubEventGrid.setItems(foodClubEvents);
             });
 
-            return deleteButton;
+            Button archiveButton = new Button("Archive", new Icon(VaadinIcon.ARCHIVE));
+            archiveButton.addClickListener( e -> {
+                if (event.getRecipe() == null) {
+                    Notification.show("You need to fill out recipe");
+                }
+                else {
+                    ArchivedRecipe archivedRecipe = new ArchivedRecipe(event.getRecipe(), event.getFoodPicture());
+                    archivedRecipeService.saveArchivedRecipe(archivedRecipe);
+                }
+            });
+
+            VerticalLayout buttonLayout = new VerticalLayout(deleteButton, archiveButton);
+
+            return buttonLayout;
         }).setHeader("Manage");
 
         VerticalLayout mainLayout = new VerticalLayout(foodClubEventGrid);

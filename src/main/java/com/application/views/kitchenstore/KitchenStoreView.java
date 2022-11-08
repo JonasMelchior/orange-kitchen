@@ -20,6 +20,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -156,7 +157,8 @@ public class KitchenStoreView extends VerticalLayout {
 
         Button finishButton = new Button("Finish", finish -> {
             if (roomNumberField.isEmpty() || quantity.isEmpty()){
-                Notification.show("You must fill out required fields");
+                Notification notification = Notification.show("You must fill out required fields");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
             else {
                 purchaseService.savePurchase(new Purchase(
@@ -166,7 +168,8 @@ public class KitchenStoreView extends VerticalLayout {
                         quantity.getValue(),
                         new java.sql.Date(System.currentTimeMillis())
                 ));
-                Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
+                Notification  notification = Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 buyDialog.close();
             }
         });

@@ -84,19 +84,24 @@ public class PurchaseService implements IPurchaseService{
 
         List<List<DailyRevenue>> dailyRevenuesRoomBased = new ArrayList<>();
 
-        for (int i  = 0; i < dailyRevenues.size(); i++) {
+        for (int i = 0; i < dailyRevenues.size(); i++) {
+            System.out.println("Iteration");
             List<DailyRevenue> tmpList = new ArrayList<>();
             tmpList.add(dailyRevenues.get(i));
             for (int j = 0; j < dailyRevenues.size(); j++) {
-                if (dailyRevenues.get(i).getRoomNumber() == dailyRevenues.get(j).getRoomNumber()) {
+                if (dailyRevenues.get(i).getRoomNumber() == dailyRevenues.get(j).getRoomNumber() && i != j ) {
                     tmpList.add(dailyRevenues.get(j));
-                    dailyRevenues.remove(j);
+                    dailyRevenues.remove(j--);
                 }
             }
-            dailyRevenues.remove(i);
+            if (dailyRevenues.size() != 0) {
+                dailyRevenues.remove(i--);
+            }
             dailyRevenuesRoomBased.add(tmpList);
         }
 
+
+        System.out.println("Size of dailyRevenuesRoomBased: " + dailyRevenuesRoomBased.size());
         return dailyRevenuesRoomBased;
     }
 

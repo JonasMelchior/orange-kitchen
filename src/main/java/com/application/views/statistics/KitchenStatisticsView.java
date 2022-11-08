@@ -161,6 +161,15 @@ public class KitchenStatisticsView extends VerticalLayout {
             charts.add(bc);
         }
         charts.forEach(soChart2::add);
+
+        List<List<DailyRevenue>> list = purchaseService.getDailyRevenueRoomNumberBased();
+
+        for (int i = 0; i < list.size(); i++) {
+            for (DailyRevenue dailyRevenue : list.get(i)) {
+                System.out.println("Day of month: " + dailyRevenue.getDayOfMonth());
+                System.out.println("Purchased amount (DKK): " + dailyRevenue.getRevenue());
+            }
+        }
     }
 
     private List<String> getBrands() {

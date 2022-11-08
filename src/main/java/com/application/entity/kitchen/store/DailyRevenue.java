@@ -10,9 +10,17 @@ public class DailyRevenue {
     private Map<String, Double> brandRevenues = new HashMap<>();
     private double revenue;
 
+    private int roomNumber;
+
     public DailyRevenue(int dayOfMonth, double revenue) {
         this.dayOfMonth = dayOfMonth;
         this.revenue = revenue;
+    }
+
+    public DailyRevenue(int dayOfMonth, double revenue, int roomNumber) {
+        this.dayOfMonth = dayOfMonth;
+        this.revenue = revenue;
+        this.roomNumber = roomNumber;
     }
 
     public DailyRevenue(int dayOfMonth) {
@@ -21,6 +29,14 @@ public class DailyRevenue {
 
     public Map<String, Double> getBrandRevenues() {
         return brandRevenues;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
     public void setBrandRevenues(Map<String, Double> brandRevenues) {

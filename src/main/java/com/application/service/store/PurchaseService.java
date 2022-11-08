@@ -59,6 +59,48 @@ public class PurchaseService implements IPurchaseService{
     }
 
     @Override
+    public List<List<DailyRevenue>> getDailyRevenueRoomNumberBased() {
+        List<Purchase> purchases = findAll();
+
+        List<DailyRevenue> dailyRevenues = new ArrayList<>();
+
+        for (int i = 0; i < purchases.size(); i++) {
+            if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
+                DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount(), purchases.get(i).getRoomNumber());
+                for (int j = 0; j < purchases.size(); j++) {
+                    if (purchases.get(j).getDate().getDate() == purchases.get(i).getDate().getDate() && i != j &&
+                            java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(j).getDate().getMonth() &&
+                        purchases.get(i).getRoomNumber() == purchases.get(j).getRoomNumber()) {
+                        dailyRevenue.setRevenue(dailyRevenue.getRevenue() + purchases.get(j).getPurchaseAmount());
+                        purchases.remove(j--);
+                    }
+                }
+                purchases.remove(i--);
+                dailyRevenues.add(dailyRevenue);
+            }
+        }
+
+        dailyRevenues.sort(Comparator.comparingInt(DailyRevenue::getDayOfMonth));
+
+        List<List<DailyRevenue>> dailyRevenuesRoomBased = new ArrayList<>();
+
+        for (int i  = 0; i < dailyRevenues.size(); i++) {
+            List<DailyRevenue> tmpList = new ArrayList<>();
+            tmpList.add(dailyRevenues.get(i));
+            for (int j = 0; j < dailyRevenues.size(); j++) {
+                if (dailyRevenues.get(i).getRoomNumber() == dailyRevenues.get(j).getRoomNumber()) {
+                    tmpList.add(dailyRevenues.get(j));
+                    dailyRevenues.remove(j);
+                }
+            }
+            dailyRevenues.remove(i);
+            dailyRevenuesRoomBased.add(tmpList);
+        }
+
+        return dailyRevenuesRoomBased;
+    }
+
+    @Override
     public List<DailyRevenue> getDailyRevenueBrandBased() {
         List<Purchase> purchases = findAll();
 

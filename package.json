@@ -262,9 +262,7 @@
     "@polymer/polymer": "$@polymer/polymer",
     "chokidar": "$chokidar",
     "date-fns": "$date-fns",
-    "echarts": "$echarts",
-    "@vaadin-component-factory/vcf-nav": "$@vaadin-component-factory/vcf-nav",
-    "line-awesome": "$line-awesome"
+    "echarts": "$echarts"
   },
   "vaadin": {
     "dependencies": {

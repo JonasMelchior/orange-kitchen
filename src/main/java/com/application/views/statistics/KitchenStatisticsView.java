@@ -6,8 +6,12 @@ import com.application.service.foodclub.IFoodClubEventService;
 import com.application.service.store.IPurchaseService;
 import com.application.views.MainLayout;
 import com.storedobject.chart.*;
+import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -54,10 +58,29 @@ public class KitchenStatisticsView extends VerticalLayout {
         VerticalLayout verticalLayout2 = new VerticalLayout(soChart2, soChart3);
         verticalLayout2.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
-        HorizontalLayout statisticsLayout = new HorizontalLayout(verticalLayout1, verticalLayout2);
-        statisticsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);
+        /*FlexLayout statisticsLayout = new FlexLayout();
+        statisticsLayout.setFlexDirection(FlexLayout.FlexDirection.ROW);
+        statisticsLayout.setFlexWrap(FlexLayout.FlexWrap.WRAP);
+        statisticsLayout.setFlexBasis("200px", monthlyRevenueLayoutWrapper);
+        statisticsLayout.setFlexBasis("500px", soChart1);
+        statisticsLayout.setFlexBasis("500px", soChart2);
+        statisticsLayout.setFlexBasis("500px", soChart3);*/
+
+
+        VerticalLayout statisticsLayout = new VerticalLayout(monthlyRevenueLayoutWrapper, new HorizontalGreyLine(), soChart1, new HorizontalGreyLine(), soChart2, new HorizontalGreyLine(), soChart3, new HorizontalGreyLine());
+        soChart1.setSize("800px", "500px");
+        soChart2.setSize("800px", "500px");
+        soChart3.setSize("800px", "500px");
+        statisticsLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+
+
+        /*HorizontalLayout statisticsLayout = new HorizontalLayout(verticalLayout1, verticalLayout2);
+        statisticsLayout.setDefaultVerticalComponentAlignment(Alignment.CENTER);*/
+
+
 
         add(statisticsLayout);
+
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
     }
 
@@ -235,5 +258,10 @@ public class KitchenStatisticsView extends VerticalLayout {
         return brands;
     }
 
-
+    @Tag("vaadin-line")
+    public class HorizontalGreyLine extends Div {
+        public HorizontalGreyLine() {
+            getStyle().set("width","100%").set("border-top","3px solid grey");
+        }
+    }
 }

@@ -1,13 +1,14 @@
 package com.application.views.kitchenstore;
 
 import com.application.entity.kitchen.store.Beverage;
+import com.application.entity.kitchen.store.Food;
+import com.application.entity.kitchen.store.KitchenStoreItem;
 import com.application.entity.kitchen.store.Purchase;
-import com.application.service.store.BeverageService;
-import com.application.service.store.IBeverageService;
-import com.application.service.store.IPurchaseService;
-import com.application.service.store.PurchaseService;
+import com.application.service.store.*;
 import com.application.views.MainLayout;
 import com.application.views.components.store.BeverageForm;
+import com.application.views.components.store.FoodForm;
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.charts.model.Dial;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
@@ -27,12 +29,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,44 +44,103 @@ import java.util.List;
 @Route(value = "kitchen-store", layout = MainLayout.class)
 public class KitchenStoreView extends VerticalLayout {
     BeverageForm beverageForm;
+    FoodForm foodForm;
 
     private IBeverageService beverageService;
     private IPurchaseService purchaseService;
-
+    private IFoodService foodService;
+    FormLayout formLayout = new FormLayout();
+    FlexLayout beveragesLayout;
+    FlexLayout foodsLayout;
+    VerticalLayout storeItemsLayout;
     Dialog buyDialog = new Dialog();
 
-    public KitchenStoreView(@Autowired BeverageService beverageService, @Autowired PurchaseService purchaseService) {
+    public KitchenStoreView(@Autowired BeverageService beverageService, @Autowired PurchaseService purchaseService, @Autowired FoodService foodService) {
         beverageForm = new BeverageForm(beverageService);
         beverageForm.setVisible(false);
+        foodForm = new FoodForm(foodService);
+        foodForm.setVisible(false);
         this.beverageService = beverageService;
+        this.foodService = foodService;
         this.purchaseService = purchaseService;
 
-        Button testButton = new Button("Add Store Item (So far only beverages)");
-        testButton.addClickListener(click -> {
+
+
+
+        List<Beverage> beverages = beverageService.findAll();
+        List<Food> foods = foodService.findAll();
+
+        beveragesLayout = new FlexLayout(generateBeveragesLayout(beverages));
+        foodsLayout = new FlexLayout(generateFoodsLayout(foods));
+
+        storeItemsLayout = new VerticalLayout(beveragesLayout, new HorizontalGreyLine(), foodsLayout);
+
+
+
+        HorizontalLayout mainLayout = new HorizontalLayout(storeItemsLayout, beverageForm);
+        mainLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+        mainLayout.setFlexGrow(2, storeItemsLayout);
+        mainLayout.setFlexGrow(1, beveragesLayout);
+
+        Button addBeverageItemButton = new Button("Add Beverage", new Icon(VaadinIcon.GLASS));
+        addBeverageItemButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addBeverageItemButton.addClickListener(click -> {
+            mainLayout.remove(foodForm);
+            mainLayout.add(beverageForm);
             beverageForm.setVisible(!beverageForm.isVisible());
         });
 
+        Button addFoodItemButton = new Button("Add Food", new Icon(VaadinIcon.CUTLERY));
+        addFoodItemButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addFoodItemButton.addClickListener( click -> {
+            mainLayout.remove(beverageForm);
+            mainLayout.add(foodForm);
+            foodForm.setVisible(!foodForm.isVisible());
+        });
 
-        FlexLayout beveragesLayout = new FlexLayout(generateBeveragesLayout());
+        HorizontalLayout addStoreItemButtonLayout = new HorizontalLayout(addBeverageItemButton, addFoodItemButton);
+        addStoreItemButtonLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
 
-        HorizontalLayout mainLayout = new HorizontalLayout(beveragesLayout, beverageForm);
-        mainLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
-        mainLayout.setFlexGrow(2, beveragesLayout);
-        mainLayout.setFlexGrow(1, beverageForm);
+        TextField searchField = new TextField();
+        searchField.setWidth("50%");
+        searchField.setPlaceholder("Search");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
 
-        add(testButton, mainLayout);
+        searchField.addValueChangeListener( event -> {
+            List<Beverage> filteredBeverages = new ArrayList<>();
+            List<Food> filteredFoods = new ArrayList<>();
+
+            for (Beverage beverage : beverages) {
+                if (beverage.getBrand().toLowerCase().contains(event.getValue().toLowerCase()) || beverage.getDescription().toLowerCase().contains(event.getValue().toLowerCase())) {
+                    filteredBeverages.add(beverage);
+                }
+            }
+            for (Food food : foods) {
+                if (food.getFoodType().toLowerCase().contains(event.getValue().toLowerCase()) || food.getDescription().toLowerCase().contains(event.getValue().toLowerCase())) {
+                    filteredFoods.add(food);
+                }
+            }
+
+            beveragesLayout = new FlexLayout(generateBeveragesLayout(filteredBeverages));
+            foodsLayout = new FlexLayout(generateFoodsLayout(filteredFoods));
+
+            storeItemsLayout.removeAll();
+            storeItemsLayout.add(beveragesLayout, new HorizontalGreyLine(), foodsLayout);
+        });
+
+        add(addStoreItemButtonLayout, searchField, mainLayout);
         setSizeFull();
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
     }
 
 
-    private FlexLayout generateBeveragesLayout() {
+    private FlexLayout generateBeveragesLayout(List<Beverage> beverages) {
         FlexLayout beveragesLayout = new FlexLayout();
         beveragesLayout.setFlexDirection(FlexLayout.FlexDirection.ROW);
         beveragesLayout.setFlexWrap(FlexLayout.FlexWrap.WRAP);
 
-        List<Beverage> beverages = beverageService.findAll();
 
         for (Beverage beverage : beverages) {
             Image image = beverageService.generateBeverageImage(beverage);
@@ -139,13 +202,73 @@ public class KitchenStoreView extends VerticalLayout {
             beveragesLayout.setFlexBasis("200px", beverageLayout);
             beveragesLayout.add(beverageLayout);
         }
-
         return beveragesLayout;
     }
 
+    List<Food> foods;
+    private FlexLayout generateFoodsLayout(List<Food> foods) {
+        FlexLayout foodsLayout = new FlexLayout();
+        foodsLayout.setFlexDirection(FlexLayout.FlexDirection.ROW);
+        foodsLayout.setFlexWrap(FlexLayout.FlexWrap.WRAP);
 
 
-    private VerticalLayout createBuyItemDialogLayout(Beverage beverage) {
+        for (Food food : foods) {
+            Image image = foodService.generateFoodImage(food);
+            image.setWidth("300px");
+            image.setHeight("300px");
+
+            VerticalLayout foodLayout = new VerticalLayout(image);
+
+            Div foodType = new Div();
+            foodType.setText("Food Type: " + food.getFoodType());
+
+            Div description = new Div();
+            description.setText("Description: " + food.getDescription());
+
+            Div price = new Div();
+            price.setText("Price: " + food.getPrice() + " DKK");
+
+            Button buyButton = new Button("Buy", new Icon(VaadinIcon.DOLLAR));
+            buyButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+
+            buyButton.addClickListener(buy -> {
+                buyDialog.removeAll();
+                buyDialog.add(createBuyItemDialogLayout(food));
+                buyDialog.open();
+            });
+
+
+            Button editButton = new Button("Edit Item", edit -> {
+                foodForm.editFood(food);
+                beverageForm.setVisible(false);
+                foodForm.setVisible(true);
+            });
+
+            Button deleteButton = new Button(new Icon(VaadinIcon.TRASH), delete -> {
+                foodService.delete(food);
+                UI.getCurrent().getPage().reload();
+            });
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+
+
+            HorizontalLayout buttonLayout = new HorizontalLayout(buyButton, editButton, deleteButton);
+            buttonLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
+
+            foodLayout.add(
+                    foodType,
+                    description,
+                    price,
+                    buttonLayout
+            );
+            foodLayout.addClassNames("layout-with-border-store-item-food");
+            foodsLayout.setFlexBasis("200px", foodLayout);
+            foodsLayout.add(foodLayout);
+        }
+        return foodsLayout;
+    }
+
+
+    private VerticalLayout createBuyItemDialogLayout(KitchenStoreItem kitchenStoreItem) {
         IntegerField roomNumberField = new IntegerField("Room Number");
 
         IntegerField quantity = new IntegerField("Quantity");
@@ -161,13 +284,26 @@ public class KitchenStoreView extends VerticalLayout {
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
             else {
-                purchaseService.savePurchase(new Purchase(
-                        roomNumberField.getValue(),
-                        beverage.getPrice(),
-                        beverage.getBrand(),
-                        quantity.getValue(),
-                        new java.sql.Date(System.currentTimeMillis())
-                ));
+                if (kitchenStoreItem.getClass() == Food.class) {
+                    Food food = (Food) kitchenStoreItem;
+                    purchaseService.savePurchase(new Purchase(
+                            roomNumberField.getValue(),
+                            food.getPrice(),
+                            food.getFoodType(),
+                            quantity.getValue(),
+                            new java.sql.Date(System.currentTimeMillis())
+                    ));
+                }
+                else if (kitchenStoreItem.getClass() == Beverage.class) {
+                    Beverage beverage = (Beverage) kitchenStoreItem;
+                    purchaseService.savePurchase(new Purchase(
+                            roomNumberField.getValue(),
+                            beverage.getPrice(),
+                            beverage.getBrand(),
+                            quantity.getValue(),
+                            new java.sql.Date(System.currentTimeMillis())
+                    ));
+                }
                 Notification  notification = Notification.show("Purchase successful. You will be notified regarding payment at the end of the month :)");
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 buyDialog.close();
@@ -178,5 +314,12 @@ public class KitchenStoreView extends VerticalLayout {
         dialogLayout.setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         return dialogLayout;
+    }
+
+    @Tag("vaadin-line")
+    public class HorizontalGreyLine extends Div {
+        public HorizontalGreyLine() {
+            getStyle().set("width","100%").set("border-top","3px solid grey");
+        }
     }
 }

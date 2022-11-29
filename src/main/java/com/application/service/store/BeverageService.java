@@ -52,7 +52,7 @@ public class BeverageService implements IBeverageService {
         });
 
         resource.setContentType("image/png");
-        return new Image(resource, "food-picture");
+        return new Image(resource, "beverage-picture");
     }
 
 

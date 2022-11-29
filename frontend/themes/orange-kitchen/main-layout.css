@@ -71,3 +71,13 @@
   border-spacing: initial;
   margin: 3px;
 }
+
+.layout-with-border-store-item-food {
+  border-radius: initial;
+  border: 4px solid hotpink;
+  width: border-box;
+  height: border-box;
+  position: center;
+  border-spacing: initial;
+  margin: 3px;
+}

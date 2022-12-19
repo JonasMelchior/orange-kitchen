@@ -191,7 +191,7 @@ public class KitchenStatisticsView extends VerticalLayout {
 
         List<List<DailyRevenue>> dailyRevenuesRoomBased = purchaseService.getDailyRevenueRoomNumberBased();
 
-        for (List<DailyRevenue> revenues : dailyRevenuesRoomBased) {
+        /*for (List<DailyRevenue> revenues : dailyRevenuesRoomBased) {
             System.out.println("New");
             for (DailyRevenue dailyRevenue : revenues) {
                 System.out.println("Day of month: " + dailyRevenue.getDayOfMonth());
@@ -199,11 +199,13 @@ public class KitchenStatisticsView extends VerticalLayout {
                 System.out.println("Day of month: " + dailyRevenue.getDayOfMonth());
                 System.out.println("Purchased amount (DKK): " + dailyRevenue.getRevenue());
             }
-        }
+        }*/
 
         LineChart[] lineCharts = new LineChart[dailyRevenuesRoomBased.size()];
         Data[] xValuesRoomBased = new Data[lineCharts.length];
         Data[] yValuesRoomBased = new Data[lineCharts.length];
+
+        System.out.println("Linecharts length: " + lineCharts.length);
 
         int i;
         for (i = 0; i < lineCharts.length; i++) {
@@ -214,7 +216,10 @@ public class KitchenStatisticsView extends VerticalLayout {
         }
 
         for (i = 0; i < lineCharts.length; i++) {
+            System.out.println("Room number': " + dailyRevenuesRoomBased.get(i).get(0).getRoomNumber());
             for (DailyRevenue dailyRevenue : dailyRevenuesRoomBased.get(i)) {
+                System.out.println("day of month: " + dailyRevenue.getDayOfMonth());
+                System.out.println("Revenue: " + dailyRevenue.getRevenue());
                 xValuesRoomBased[i].add(dailyRevenue.getDayOfMonth());
                 yValuesRoomBased[i].add(dailyRevenue.getRevenue());
             }
@@ -251,6 +256,11 @@ public class KitchenStatisticsView extends VerticalLayout {
         brands.add("Pepsi");
         brands.add("Egekilde");
         brands.add("Faxe Kondi");
+        brands.add("Ramen");
+        brands.add("Pizza");
+        brands.add("Fries");
+        brands.add("Burgers");
+        brands.add("Ice Cream");
         brands.add("Other");
 
         brands.sort(String::compareTo);

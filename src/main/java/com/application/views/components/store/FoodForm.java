@@ -129,7 +129,7 @@ public class FoodForm extends FormLayout {
 
 
 
-    public void editFood(Food beverafoodge) {
+    public void editFood(Food food) {
         this.food = food;
         if (food.getFoodType() != null) {
             foodType.setValue(food.getFoodType());

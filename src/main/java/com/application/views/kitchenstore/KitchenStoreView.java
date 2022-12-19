@@ -53,6 +53,7 @@ public class KitchenStoreView extends VerticalLayout {
     FlexLayout beveragesLayout;
     FlexLayout foodsLayout;
     VerticalLayout storeItemsLayout;
+    HorizontalLayout mainLayout;
     Dialog buyDialog = new Dialog();
 
     public KitchenStoreView(@Autowired BeverageService beverageService, @Autowired PurchaseService purchaseService, @Autowired FoodService foodService) {
@@ -77,7 +78,7 @@ public class KitchenStoreView extends VerticalLayout {
 
 
 
-        HorizontalLayout mainLayout = new HorizontalLayout(storeItemsLayout, beverageForm);
+        mainLayout = new HorizontalLayout(storeItemsLayout, beverageForm);
         mainLayout.setDefaultVerticalComponentAlignment(Alignment.BASELINE);
         mainLayout.setFlexGrow(2, storeItemsLayout);
         mainLayout.setFlexGrow(1, beveragesLayout);
@@ -177,7 +178,10 @@ public class KitchenStoreView extends VerticalLayout {
 
             Button editButton = new Button("Edit Item", edit -> {
                beverageForm.editBeverage(beverage);
-               beverageForm.setVisible(true);
+                mainLayout.remove(foodForm);
+                mainLayout.add(beverageForm);
+                beverageForm.setVisible(true);
+                beverageForm.scrollIntoView();
             });
 
             Button deleteButton = new Button(new Icon(VaadinIcon.TRASH), delete -> {
@@ -240,8 +244,10 @@ public class KitchenStoreView extends VerticalLayout {
 
             Button editButton = new Button("Edit Item", edit -> {
                 foodForm.editFood(food);
-                beverageForm.setVisible(false);
+                mainLayout.remove(beverageForm);
+                mainLayout.add(foodForm);
                 foodForm.setVisible(true);
+                foodForm.scrollIntoView();
             });
 
             Button deleteButton = new Button(new Icon(VaadinIcon.TRASH), delete -> {

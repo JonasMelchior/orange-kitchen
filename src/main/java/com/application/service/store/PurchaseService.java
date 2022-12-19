@@ -43,11 +43,11 @@ public class PurchaseService implements IPurchaseService{
 
         for (int i = 0; i < purchases.size(); i++) {
             if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
-                DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount());
+                DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount() * purchases.get(i).getQuantity());
                 for (int j = 0; j < purchases.size(); j++) {
                     if (purchases.get(j).getDate().getDate() == purchases.get(i).getDate().getDate() && i != j &&
                             java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(j).getDate().getMonth()) {
-                        dailyRevenue.setRevenue(dailyRevenue.getRevenue() + purchases.get(j).getPurchaseAmount());
+                        dailyRevenue.setRevenue(dailyRevenue.getRevenue() + purchases.get(j).getPurchaseAmount() * purchases.get(j).getQuantity());
                         purchases.remove(j--);
                     }
                 }
@@ -66,12 +66,12 @@ public class PurchaseService implements IPurchaseService{
 
         for (int i = 0; i < purchases.size(); i++) {
             if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
-                DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount(), purchases.get(i).getRoomNumber());
+                DailyRevenue dailyRevenue = new DailyRevenue(purchases.get(i).getDate().getDate(), purchases.get(i).getPurchaseAmount() * purchases.get(i).getQuantity(), purchases.get(i).getRoomNumber());
                 for (int j = 0; j < purchases.size(); j++) {
                     if (purchases.get(j).getDate().getDate() == purchases.get(i).getDate().getDate() && i != j &&
                             java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(j).getDate().getMonth() &&
                         purchases.get(i).getRoomNumber() == purchases.get(j).getRoomNumber()) {
-                        dailyRevenue.setRevenue(dailyRevenue.getRevenue() + purchases.get(j).getPurchaseAmount());
+                        dailyRevenue.setRevenue(dailyRevenue.getRevenue() + purchases.get(j).getPurchaseAmount() * purchases.get(j).getQuantity());
                         purchases.remove(j--);
                     }
                 }
@@ -85,7 +85,6 @@ public class PurchaseService implements IPurchaseService{
         List<List<DailyRevenue>> dailyRevenuesRoomBased = new ArrayList<>();
 
         for (int i = 0; i < dailyRevenues.size(); i++) {
-            System.out.println("Iteration");
             List<DailyRevenue> tmpList = new ArrayList<>();
             tmpList.add(dailyRevenues.get(i));
             for (int j = 0; j < dailyRevenues.size(); j++) {
@@ -100,8 +99,14 @@ public class PurchaseService implements IPurchaseService{
             dailyRevenuesRoomBased.add(tmpList);
         }
 
+        for (int i = 0; i < dailyRevenuesRoomBased.size(); i++) {
+            System.out.println("Room Number: " + dailyRevenuesRoomBased.get(i).get(0).getRoomNumber());
 
-        System.out.println("Size of dailyRevenuesRoomBased: " + dailyRevenuesRoomBased.size());
+            for (int j = 0; j < dailyRevenuesRoomBased.get(i).size(); j++) {
+                System.out.println("Date: " + dailyRevenuesRoomBased.get(i).get(j).getDayOfMonth());
+            }
+        }
+
         return dailyRevenuesRoomBased;
     }
 
@@ -141,6 +146,7 @@ public class PurchaseService implements IPurchaseService{
                 while (itr.hasNext()) {
                     String key = (String) itr.next();
                     if (key.equals(brand)) {
+                        System.out.println("Brand: " + brand);
                         brandPurchased = true;
                     }
                 }
@@ -206,7 +212,7 @@ public class PurchaseService implements IPurchaseService{
 
 
             if (java.time.LocalDateTime.now().getMonthValue() - 1 == purchases.get(i).getDate().getMonth()) {
-                System.out.println("hello");
+
                 PurchasedBrand purchasedBrand = new PurchasedBrand(purchases.get(i).getBrand(), purchases.get(i).getQuantity());
                 for (int j = 0; j < purchases.size(); j++) {
                     if (purchases.get(j).getBrand().equals(purchasedBrand.getBrand()) && i != j &&

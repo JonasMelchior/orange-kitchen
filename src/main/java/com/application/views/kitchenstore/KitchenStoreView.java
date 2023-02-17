@@ -273,7 +273,7 @@ public class KitchenStoreView extends VerticalLayout {
         return foodsLayout;
     }
 
-
+//
     private VerticalLayout createBuyItemDialogLayout(KitchenStoreItem kitchenStoreItem) {
         IntegerField roomNumberField = new IntegerField("Room Number");
 

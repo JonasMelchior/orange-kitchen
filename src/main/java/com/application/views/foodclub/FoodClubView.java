@@ -279,7 +279,6 @@ public class FoodClubView extends VerticalLayout {
 
         retList.add("Abhista Partal");
         retList.add("Bo Cui");
-        retList.add("Agnes Hein");
         retList.add("Ambrus Török");
         retList.add("Birgitta Nebel");
         retList.add("Christian N. M. Nielsen");
@@ -289,18 +288,16 @@ public class FoodClubView extends VerticalLayout {
         retList.add("Daniel Kamperlund");
         retList.add("Gert Skau Vincentzen");
         retList.add("Gina Janoki");
-        retList.add("Hannah Engmose");
         retList.add("Heini Poulsen");
         retList.add("Helene Lefmann");
         retList.add("Jonas (Kitchen Commando)");
-        retList.add("Kasper Guttorm Andersen");
-        retList.add("Long Ngo");
         retList.add("Marcus Galea Jacobsen");
-        retList.add("Mette Elizabeth Kristensen");
         retList.add("Mikki Olsen");
         retList.add("Mikkel Kannik");
         retList.add("Ronja Toft");
-        retList.add("Valentina Custodio");
+        retList.add("Nicolai Jess");
+        retList.add("Sille Kvist");
+        retList.add("Louisa Gudmand");
         retList.add("William Carlsen");
 
         return retList;

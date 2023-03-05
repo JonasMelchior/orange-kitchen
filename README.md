@@ -10,7 +10,7 @@ type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
 http://localhost:8080 in your browser.
 
 You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different 
+Maven project. Read more on [how to import Vaadin projects to different
 IDEs](https://vaadin.com/docs/latest/flow/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
 
 ## Deploying to Production
@@ -40,8 +40,40 @@ Once the JAR file is built, you can run it using
 - Create new projects at [start.vaadin.com](https://start.vaadin.com/).
 - Search UI components and their usage examples at [vaadin.com/components](https://vaadin.com/components).
 - View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Discover Vaadin's set of CSS utility classes that enable building any UI without custom CSS in the [docs](https://vaadin.com/docs/latest/ds/foundation/utility-classes). 
+- Discover Vaadin's set of CSS utility classes that enable building any UI without custom CSS in the [docs](https://vaadin.com/docs/latest/ds/foundation/utility-classes).
 - Find a collection of solutions to common use cases in [Vaadin Cookbook](https://cookbook.vaadin.com/).
 - Find Add-ons at [vaadin.com/directory](https://vaadin.com/directory).
 - Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
 - Report issues, create pull requests in [GitHub](https://github.com/vaadin/platform).
+
+You have to create a `application.properties` in /src/main/resources with content
+
+```application.properties
+server.port=${PORT:8080}
+logging.level.org.atmosphere = warn
+spring.mustache.check-template-location = false
+
+# Launch the default browser when starting the application in development mode
+vaadin.launch-browser=false
+# To improve the performance during development.
+# For more information https://vaadin.com/docs/flow/spring/tutorial-spring-configuration.html#special-configuration-parameters
+vaadin.whitelisted-packages = com.storedobject.chart,com.vaadin,org.vaadin,dev.hilla,com.application
+
+spring.main.banner-mode=off
+logging.level.org.springframework=ERROR
+
+# For deployment at heroku
+#spring.datasource.url=${DATABASE_URL}
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.generate-ddl=true
+spring.jpa.hibernate.ddl-auto = update
+
+# For dev
+spring.datasource.url=...
+spring.datasource.username=...
+spring.datasource.password=...
+spring.datasource.driver-class-name=org.postgresql.Driver
+```
